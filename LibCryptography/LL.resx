@@ -126,4 +126,13 @@
   <data name="ZHash_ArgumentNullException_SaltString" xml:space="preserve">
     <value>"SaltString" is null.</value>
   </data>
+  <data name="ZKeyedHash_ArgumentNullException_OriginBytes" xml:space="preserve">
+    <value>"OriginBytes" is null.</value>
+  </data>
+  <data name="ZKeyedHash_ArgumentNullException_OriginString" xml:space="preserve">
+    <value>"OriginString" is null.</value>
+  </data>
+  <data name="ZKeyedHash_ArgumentNullException_SaltString" xml:space="preserve">
+    <value>"SaltString" is null.</value>
+  </data>
 </root>

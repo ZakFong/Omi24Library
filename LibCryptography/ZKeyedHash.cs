@@ -2,11 +2,13 @@
     FileName: ZKeyedHash.cs
     Version: 0.11
     Namespace: Omi24.Cryptography
-    Description: Hash for designated algorithm.
+    Description: Keyed hash for designated algorithm.
     Web: http://www.omi24.com
 
     History:
-        0.10: 20180428, 馮瑞祥 - Zak Fong
+        0.10: 20180429, 馮瑞祥 - Zak Fong
+        0.11: 20180513, 馮瑞祥 - Zak Fong
+            Move "Hash" from property to field and rename as "_hash" (No need to reveal it).
 */
 
 using System;
@@ -17,14 +19,14 @@ namespace Omi24.Cryptography
 {
     /// <inheritdoc />
     /// <summary>
-    /// Hash for designated algorithm.
+    /// Keyed hash for designated algorithm.
     /// </summary>
     public class ZKeyedHash : IDisposable
     {
         #region Constructor
 
         /// <summary>
-        /// Constructor using SHA-512.
+        /// Constructor using HMAC SHA-512.
         /// </summary>
         public ZKeyedHash()
         {
@@ -32,18 +34,18 @@ namespace Omi24.Cryptography
         }
 
         /// <summary>
-        /// Constructor using designated hash algorithm.
+        /// Constructor using designated keyed hash algorithm.
         /// </summary>
-        /// <param name="hashAlgorithmType">Designated hash algorithm type.</param>
+        /// <param name="hashAlgorithmType">Designated keyed hash algorithm type.</param>
         public ZKeyedHash(ZKeyedHashAlgorithmType hashAlgorithmType)
         {
             SetHashAlgorithm(hashAlgorithmType);
         }
 
         /// <summary>
-        /// Constructor using designated hash algorithm and assigned origin byte array.
+        /// Constructor using designated keyed hash algorithm and assigned origin byte array.
         /// </summary>
-        /// <param name="hashAlgorithmType">Designated hash algorithm type.</param>
+        /// <param name="hashAlgorithmType">Designated keyed hash algorithm type.</param>
         /// <param name="originBytes">Origin byte array.</param>
         public ZKeyedHash(ZKeyedHashAlgorithmType hashAlgorithmType, byte[] originBytes)
         {
@@ -94,16 +96,20 @@ namespace Omi24.Cryptography
 
         #endregion Constructor
 
-        #region Property
+        #region Field
 
         #region Hash: Hash algorithm provider.
 
         /// <summary>
         /// Hash algorithm provider.
         /// </summary>
-        public HashAlgorithm Hash { get; private set; }
+        private HashAlgorithm _hash;
 
         #endregion Hash: Hash algorithm provider.
+
+        #endregion Field
+
+        #region Property
 
         #region HashAlgorithmType: Desinated hash algorithm type.
 
@@ -158,9 +164,7 @@ namespace Omi24.Cryptography
         public string OriginString
         {
             get => Encoding.UTF8.GetString(_originBytes);
-            set => _originBytes =
-                Encoding.UTF8.GetBytes(
-                    value ?? throw new ArgumentNullException(LL.ZKeyedHash_ArgumentNullException_OriginString));
+            set => _originBytes = Encoding.UTF8.GetBytes(value ?? throw new ArgumentNullException(LL.ZKeyedHash_ArgumentNullException_OriginString));
         }
 
         #endregion OriginString: Origin string.
@@ -191,9 +195,7 @@ namespace Omi24.Cryptography
         public string SaltString
         {
             get => Encoding.UTF8.GetString(Salt);
-            set => Salt =
-                Encoding.UTF8.GetBytes(
-                    value ?? throw new ArgumentNullException(LL.ZKeyedHash_ArgumentNullException_SaltString));
+            set => Salt = Encoding.UTF8.GetBytes(value ?? throw new ArgumentNullException(LL.ZKeyedHash_ArgumentNullException_SaltString));
         }
 
         #endregion SaltString: Salt string.
@@ -223,41 +225,41 @@ namespace Omi24.Cryptography
         /// </summary>
         private void SetHashAlgorithm()
         {
-            if (Hash != null)
+            if (_hash != null)
             {
-                Hash.Dispose();
-                Hash = null;
+                _hash.Dispose();
+                _hash = null;
             }
 
             switch (HashAlgorithmType)
             {
-                case ZKeyedHashAlgorithmType.Md5:
-                    Hash = MD5.Create();
+                case ZKeyedHashAlgorithmType.HmacMd5:
+                    _hash = new HMACMD5();
                     break;
 
-                case ZKeyedHashAlgorithmType.RipeMd160:
-                    Hash = new RIPEMD160Managed();
+                case ZKeyedHashAlgorithmType.HmacRipeMd160:
+                    _hash = new HMACRIPEMD160();
                     break;
 
-                case ZKeyedHashAlgorithmType.Sha1:
-                    Hash = new SHA1Managed();
+                case ZKeyedHashAlgorithmType.HmacSha1:
+                    _hash = new HMACSHA1();
                     break;
 
-                case ZKeyedHashAlgorithmType.Sha256:
-                    Hash = new SHA256Managed();
+                case ZKeyedHashAlgorithmType.HmacSha256:
+                    _hash = new HMACSHA256();
                     break;
 
-                case ZKeyedHashAlgorithmType.Sha384:
-                    Hash = new SHA384Managed();
+                case ZKeyedHashAlgorithmType.HmacSha384:
+                    _hash = new HMACSHA384();
                     break;
 
                 case ZKeyedHashAlgorithmType.HmacSha512:
-                    Hash = new SHA512Managed();
+                    _hash = new HMACSHA512();
                     break;
 
                 default:
                     HashAlgorithmType = ZKeyedHashAlgorithmType.HmacSha512;
-                    Hash = new SHA512Managed();
+                    _hash = new HMACSHA512();
                     break;
             }
         }
@@ -304,7 +306,7 @@ namespace Omi24.Cryptography
                 sourceBytes = OriginBytes;
             }
 
-            HashedBytes = Hash.ComputeHash(sourceBytes);
+            HashedBytes = _hash.ComputeHash(sourceBytes);
 
             return HashedBytes;
         }
@@ -390,7 +392,7 @@ namespace Omi24.Cryptography
         /// <summary>
         /// Dispose
         /// </summary>
-        void IDisposable.Dispose() => Hash?.Dispose();
+        void IDisposable.Dispose() => _hash?.Dispose();
 
         #endregion Dispose
 

@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("LibCryptography")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Omi24 Cryptography")]
+[assembly: AssemblyDescription("Cryptography related genies.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("LibCryptography")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCompany("Omi24")]
+[assembly: AssemblyProduct("Omi24 Cryptography")]
+[assembly: AssemblyCopyright("Copyright © Omi24 2018")]
+[assembly: AssemblyTrademark("Omi24")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible

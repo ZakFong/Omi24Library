@@ -7,6 +7,8 @@
 
     History:
         0.10: 20180428, 馮瑞祥 - Zak Fong
+        0.11: 20180513, 馮瑞祥 - Zak Fong
+            Move "Hash" from property to field and rename as "_hash" (No need to reveal it).
 */
 
 using System;
@@ -94,16 +96,20 @@ namespace Omi24.Cryptography
 
         #endregion Constructor
 
-        #region Property
+        #region Field
 
         #region Hash: Hash algorithm provider.
 
         /// <summary>
         /// Hash algorithm provider.
         /// </summary>
-        public HashAlgorithm Hash { get; private set; }
+        private HashAlgorithm _hash;
 
         #endregion Hash: Hash algorithm provider.
+
+        #endregion Field
+
+        #region Property
 
         #region HashAlgorithmType: Desinated hash algorithm type.
 
@@ -198,20 +204,6 @@ namespace Omi24.Cryptography
 
         #region Function
 
-        #region Reset: Reset.
-
-        /// <summary>
-        /// Reset.
-        /// </summary>
-        public void Reset()
-        {
-            OriginBytes = HashedBytes = Salt = null;
-
-            SetHashAlgorithm();
-        }
-
-        #endregion Reset: Reset.
-
         #region SetHashAlgorithm: Set hash algorithm. (Default: SHA-512)
 
         /// <summary>
@@ -219,41 +211,41 @@ namespace Omi24.Cryptography
         /// </summary>
         private void SetHashAlgorithm()
         {
-            if (Hash != null)
+            if (_hash != null)
             {
-                Hash.Dispose();
-                Hash = null;
+                _hash.Dispose();
+                _hash = null;
             }
 
             switch (HashAlgorithmType)
             {
                 case ZHashAlgorithmType.Md5:
-                    Hash = MD5.Create();
+                    _hash = MD5.Create();
                     break;
 
                 case ZHashAlgorithmType.RipeMd160:
-                    Hash = new RIPEMD160Managed();
+                    _hash = new RIPEMD160Managed();
                     break;
 
                 case ZHashAlgorithmType.Sha1:
-                    Hash = new SHA1Managed();
+                    _hash = new SHA1Managed();
                     break;
 
                 case ZHashAlgorithmType.Sha256:
-                    Hash = new SHA256Managed();
+                    _hash = new SHA256Managed();
                     break;
 
                 case ZHashAlgorithmType.Sha384:
-                    Hash = new SHA384Managed();
+                    _hash = new SHA384Managed();
                     break;
 
                 case ZHashAlgorithmType.Sha512:
-                    Hash = new SHA512Managed();
+                    _hash = new SHA512Managed();
                     break;
 
                 default:
                     HashAlgorithmType = ZHashAlgorithmType.Sha512;
-                    Hash = new SHA512Managed();
+                    _hash = new SHA512Managed();
                     break;
             }
         }
@@ -274,7 +266,7 @@ namespace Omi24.Cryptography
 
         #region Method
 
-        #region ComputeHash
+        #region ComputeHash: Compute hash.
 
         /// <summary>
         /// Compute hash and return as byte array.
@@ -300,7 +292,7 @@ namespace Omi24.Cryptography
                 sourceBytes = OriginBytes;
             }
 
-            HashedBytes = Hash.ComputeHash(sourceBytes);
+            HashedBytes = _hash.ComputeHash(sourceBytes);
 
             return HashedBytes;
         }
@@ -357,7 +349,7 @@ namespace Omi24.Cryptography
             return ComputeHash(originString);
         }
 
-        #endregion ComputeHash
+        #endregion ComputeHash: Compute hash.
 
         #region CreateSalt: Using securely randomizer to generate salt.
 
@@ -386,9 +378,23 @@ namespace Omi24.Cryptography
         /// <summary>
         /// Dispose
         /// </summary>
-        void IDisposable.Dispose() => Hash?.Dispose();
+        void IDisposable.Dispose() => _hash?.Dispose();
 
         #endregion Dispose
+
+        #region Reset: Reset.
+
+        /// <summary>
+        /// Reset.
+        /// </summary>
+        public void Reset()
+        {
+            OriginBytes = HashedBytes = Salt = null;
+
+            SetHashAlgorithm();
+        }
+
+        #endregion Reset: Reset.
 
         #endregion Method
     }

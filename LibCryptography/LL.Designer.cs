@@ -86,5 +86,32 @@ namespace Omi24.Cryptography {
                 return ResourceManager.GetString("ZHash_ArgumentNullException_SaltString", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;OriginBytes&quot; is null..
+        /// </summary>
+        internal static string ZKeyedHash_ArgumentNullException_OriginBytes {
+            get {
+                return ResourceManager.GetString("ZKeyedHash_ArgumentNullException_OriginBytes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;OriginString&quot; is null..
+        /// </summary>
+        internal static string ZKeyedHash_ArgumentNullException_OriginString {
+            get {
+                return ResourceManager.GetString("ZKeyedHash_ArgumentNullException_OriginString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;SaltString&quot; is null..
+        /// </summary>
+        internal static string ZKeyedHash_ArgumentNullException_SaltString {
+            get {
+                return ResourceManager.GetString("ZKeyedHash_ArgumentNullException_SaltString", resourceCulture);
+            }
+        }
     }
 }
