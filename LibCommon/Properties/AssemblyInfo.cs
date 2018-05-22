@@ -8,10 +8,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Omi24 Library Common")]
 [assembly: AssemblyDescription("Common classes.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("omi24")]
+[assembly: AssemblyCompany("Omi24")]
 [assembly: AssemblyProduct("Omi24 Library")]
-[assembly: AssemblyCopyright("Copyright © Zak Fong 2018")]
-[assembly: AssemblyTrademark("omi24")]
+[assembly: AssemblyCopyright("Copyright © Omi24 2018")]
+[assembly: AssemblyTrademark("Omi24")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible

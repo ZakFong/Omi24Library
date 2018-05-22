@@ -88,6 +88,24 @@ namespace Omi24.Cryptography {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &quot;KeyBytes&quot; is null..
+        /// </summary>
+        internal static string ZKeyedHash_ArgumentNullException_KeyBytes {
+            get {
+                return ResourceManager.GetString("ZKeyedHash_ArgumentNullException_KeyBytes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;KeyBytes&quot; is null..
+        /// </summary>
+        internal static string ZKeyedHash_ArgumentNullException_KeyString {
+            get {
+                return ResourceManager.GetString("ZKeyedHash_ArgumentNullException_KeyString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &quot;OriginBytes&quot; is null..
         /// </summary>
         internal static string ZKeyedHash_ArgumentNullException_OriginBytes {
@@ -106,11 +124,29 @@ namespace Omi24.Cryptography {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &quot;SaltString&quot; is null..
+        ///   Looks up a localized string similar to &quot;Key&quot; is null..
         /// </summary>
-        internal static string ZKeyedHash_ArgumentNullException_SaltString {
+        internal static string ZKeyedHashGenie_ArgumentNullException_Key {
             get {
-                return ResourceManager.GetString("ZKeyedHash_ArgumentNullException_SaltString", resourceCulture);
+                return ResourceManager.GetString("ZKeyedHashGenie_ArgumentNullException_Key", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;Source&quot; is null..
+        /// </summary>
+        internal static string ZKeyedHashGenie_ArgumentNullException_Source {
+            get {
+                return ResourceManager.GetString("ZKeyedHashGenie_ArgumentNullException_Source", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;SourceFilePath&quot; file not found..
+        /// </summary>
+        internal static string ZKeyedHashGenie_FileNotFoundException_SourceFilePath {
+            get {
+                return ResourceManager.GetString("ZKeyedHashGenie_FileNotFoundException_SourceFilePath", resourceCulture);
             }
         }
     }

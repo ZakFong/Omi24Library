@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Omi24.Cryptography</RootNamespace>
     <AssemblyName>c1</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,6 +51,7 @@
     <Compile Include="ZHash.cs" />
     <Compile Include="ZKeyedHashAlgorithmType.cs" />
     <Compile Include="ZHashAlgorithmType.cs" />
+    <Compile Include="ZKeyedHashGenie.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="LL.resx">

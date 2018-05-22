@@ -126,13 +126,25 @@
   <data name="ZHash_ArgumentNullException_SaltString" xml:space="preserve">
     <value>"SaltString" is null.</value>
   </data>
+  <data name="ZKeyedHashGenie_ArgumentNullException_Key" xml:space="preserve">
+    <value>"Key" is null.</value>
+  </data>
+  <data name="ZKeyedHashGenie_ArgumentNullException_Source" xml:space="preserve">
+    <value>"Source" is null.</value>
+  </data>
+  <data name="ZKeyedHashGenie_FileNotFoundException_SourceFilePath" xml:space="preserve">
+    <value>"SourceFilePath" file not found.</value>
+  </data>
+  <data name="ZKeyedHash_ArgumentNullException_KeyBytes" xml:space="preserve">
+    <value>"KeyBytes" is null.</value>
+  </data>
+  <data name="ZKeyedHash_ArgumentNullException_KeyString" xml:space="preserve">
+    <value>"KeyBytes" is null.</value>
+  </data>
   <data name="ZKeyedHash_ArgumentNullException_OriginBytes" xml:space="preserve">
     <value>"OriginBytes" is null.</value>
   </data>
   <data name="ZKeyedHash_ArgumentNullException_OriginString" xml:space="preserve">
     <value>"OriginString" is null.</value>
-  </data>
-  <data name="ZKeyedHash_ArgumentNullException_SaltString" xml:space="preserve">
-    <value>"SaltString" is null.</value>
   </data>
 </root>

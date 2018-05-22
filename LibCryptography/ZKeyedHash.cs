@@ -12,6 +12,7 @@
 */
 
 using System;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -43,53 +44,25 @@ namespace Omi24.Cryptography
         }
 
         /// <summary>
-        /// Constructor using designated keyed hash algorithm and assigned origin byte array.
+        /// Constructor using designated keyed hash algorithm and assigned key byte array.
         /// </summary>
         /// <param name="hashAlgorithmType">Designated keyed hash algorithm type.</param>
-        /// <param name="originBytes">Origin byte array.</param>
-        public ZKeyedHash(ZKeyedHashAlgorithmType hashAlgorithmType, byte[] originBytes)
+        /// <param name="keyBytes">Key byte array.</param>
+        public ZKeyedHash(ZKeyedHashAlgorithmType hashAlgorithmType, byte[] keyBytes)
         {
-            OriginBytes = originBytes;
+            KeyBytes = keyBytes;
 
             SetHashAlgorithm(hashAlgorithmType);
         }
 
         /// <summary>
-        /// Constructor using designated hash algorithm and assigned origin byte array.
+        /// Constructor using designated hash algorithm and assigned key string.
         /// </summary>
         /// <param name="hashAlgorithmType">Designated hash algorithm type.</param>
-        /// <param name="originBytes">Origin byte array.</param>
-        /// <param name="saltBytes">Salt byte array.</param>
-        public ZKeyedHash(ZKeyedHashAlgorithmType hashAlgorithmType, byte[] originBytes, byte[] saltBytes)
+        /// <param name="keyString">Key string.</param>
+        public ZKeyedHash(ZKeyedHashAlgorithmType hashAlgorithmType, string keyString)
         {
-            OriginBytes = originBytes;
-            Salt = saltBytes;
-
-            SetHashAlgorithm(hashAlgorithmType);
-        }
-
-        /// <summary>
-        /// Constructor using designated hash algorithm and assigned origin string.
-        /// </summary>
-        /// <param name="hashAlgorithmType">Designated hash algorithm type.</param>
-        /// <param name="originString">Origin string.</param>
-        public ZKeyedHash(ZKeyedHashAlgorithmType hashAlgorithmType, string originString)
-        {
-            OriginString = originString;
-
-            SetHashAlgorithm(hashAlgorithmType);
-        }
-
-        /// <summary>
-        /// Constructor using designated hash algorithm and assigned origin string with salt string.
-        /// </summary>
-        /// <param name="hashAlgorithmType">Designated hash algorithm type.</param>
-        /// <param name="originString">Origin string.</param>
-        /// <param name="saltString">Salt string.</param>
-        public ZKeyedHash(ZKeyedHashAlgorithmType hashAlgorithmType, string originString, string saltString)
-        {
-            OriginString = originString;
-            SaltString = saltString;
+            KeyString = keyString;
 
             SetHashAlgorithm(hashAlgorithmType);
         }
@@ -138,6 +111,46 @@ namespace Omi24.Cryptography
 
         #endregion HashedBytes: Hash result bytes.
 
+        #region HashSize: Computed hash size in bits.
+
+        /// <summary>
+        /// Computed hash size in bits.
+        /// </summary>
+        public int HashSize => _hash.HashSize;
+
+        #endregion HashSize: Computed hash size in bits.
+
+        #region KeyBytes: Key byte array.
+
+        /// <summary>
+        /// Key byte array.
+        /// </summary>
+        private byte[] _keyBytes;
+
+        /// <summary>
+        /// Key byte array.
+        /// </summary>
+        public byte[] KeyBytes
+        {
+            get => _keyBytes;
+            set => _keyBytes = value ?? throw new ArgumentNullException(LL.ZKeyedHash_ArgumentNullException_KeyBytes);
+        }
+
+        #endregion KeyBytes: Key byte array.
+
+        #region KeyString: Key string.
+
+        /// <summary>
+        /// Key string.
+        /// </summary>
+        public string KeyString
+        {
+            get => Encoding.UTF8.GetString(_keyBytes);
+            set => _keyBytes = Encoding.UTF8.GetBytes(value ?? throw new ArgumentNullException(LL.ZKeyedHash_ArgumentNullException_KeyString));
+        }
+
+        #endregion KeyString: Key string.
+
         #region OriginBytes: Origin byte array.
 
         /// <summary>
@@ -169,37 +182,6 @@ namespace Omi24.Cryptography
 
         #endregion OriginString: Origin string.
 
-        #region SaltEnabled: Salt enabled or not.
-
-        /// <summary>
-        /// Salt enabled or not.
-        /// </summary>
-        public bool SaltEnabled => !(Salt == null || Salt.Length == 0);
-
-        #endregion SaltEnabled: Salt enabled or not.
-
-        #region Salt: Salt
-
-        /// <summary>
-        /// Salt
-        /// </summary>
-        public byte[] Salt { get; set; }
-
-        #endregion Salt: Salt
-
-        #region SaltString: Salt string.
-
-        /// <summary>
-        /// Salt string.
-        /// </summary>
-        public string SaltString
-        {
-            get => Encoding.UTF8.GetString(Salt);
-            set => Salt = Encoding.UTF8.GetBytes(value ?? throw new ArgumentNullException(LL.ZKeyedHash_ArgumentNullException_SaltString));
-        }
-
-        #endregion SaltString: Salt string.
-
         #endregion Property
 
         #region Function
@@ -211,7 +193,7 @@ namespace Omi24.Cryptography
         /// </summary>
         public void Reset()
         {
-            OriginBytes = HashedBytes = Salt = null;
+            OriginBytes = HashedBytes = null;
 
             SetHashAlgorithm();
         }
@@ -234,7 +216,7 @@ namespace Omi24.Cryptography
             switch (HashAlgorithmType)
             {
                 case ZKeyedHashAlgorithmType.HmacMd5:
-                    _hash = new HMACMD5();
+                    _hash = new HMACMD5(_keyBytes);
                     break;
 
                 case ZKeyedHashAlgorithmType.HmacRipeMd160:
@@ -293,18 +275,7 @@ namespace Omi24.Cryptography
                 throw new ArgumentNullException(LL.ZKeyedHash_ArgumentNullException_OriginBytes);
             }
 
-            byte[] sourceBytes;
-
-            if (SaltEnabled)
-            {
-                sourceBytes = new byte[OriginBytes.Length + Salt.Length];
-                Buffer.BlockCopy(OriginBytes, 0, sourceBytes, 0, OriginBytes.Length);
-                Buffer.BlockCopy(Salt, 0, sourceBytes, OriginBytes.Length, Salt.Length);
-            }
-            else
-            {
-                sourceBytes = OriginBytes;
-            }
+            var sourceBytes = OriginBytes;
 
             HashedBytes = _hash.ComputeHash(sourceBytes);
 
@@ -323,18 +294,9 @@ namespace Omi24.Cryptography
             return ComputeHash();
         }
 
-        /// <summary>
-        /// Compute hash using desinated origin byte array and salt, finally return as byte array.
-        /// </summary>
-        /// <param name="originBytes">Origin byte array.</param>
-        /// <param name="saltBytes">Salt byte array.</param>
-        /// <returns>Hashed byte array.</returns>
-        public byte[] ComputeHash(byte[] originBytes, byte[] saltBytes)
+        public byte[] ComputeHash(Stream inputStream)
         {
-            OriginBytes = originBytes;
-            Salt = saltBytes;
-
-            return ComputeHash();
+            return _hash.ComputeHash(inputStream);
         }
 
         /// <summary>
@@ -350,41 +312,7 @@ namespace Omi24.Cryptography
             return HashedBase64String;
         }
 
-        /// <summary>
-        /// Compute hash with origin string and salt string, and return result as Base64 string.
-        /// </summary>
-        /// <param name="originString">Origin string.</param>
-        /// <param name="saltString">Salt string.</param>
-        /// <returns>Hashed Base64 string.</returns>
-        public string ComputeHash(string originString, string saltString)
-        {
-            SaltString = saltString;
-
-            return ComputeHash(originString);
-        }
-
         #endregion ComputeHash
-
-        #region CreateSalt: Using securely randomizer to generate salt.
-
-        /// <summary>
-        /// Using securely randomizer to generate salt.
-        /// </summary>
-        /// <param name="length">Salt length.</param>
-        /// <return>Salt byte array.</return>
-        public byte[] CreateSalt(int length)
-        {
-            Salt = new byte[length];
-
-            using (var rng = new RNGCryptoServiceProvider())
-            {
-                rng.GetBytes(Salt);
-            }
-
-            return Salt;
-        }
-
-        #endregion CreateSalt: Using securely randomizer to generate salt.
 
         #region Dispose
 
